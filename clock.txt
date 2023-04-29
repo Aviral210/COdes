@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+	<title>HTML5 Clock</title>
+</head>
+<body style="background-color:#000;text-align:center;">
+	<canvas id="c" height="600" width="600" style=""></canvas>
+<script>
+var cvs = document.getElementById('c'),
+	ctx = cvs.getContext('2d');
+
+var length = 300;
+	radius = 250,
+	width = 5;
+
+setInterval( function () {
+
+	var now = new Date();
+
+	ctx.lineCap = 'round';
+
+	ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+	ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+
+	ctx.shadowOffsetX = 0;
+	ctx.shadowOffsetY = 0;
+	ctx.shadowBlur    = 10;
+	ctx.shadowColor   = 'rgba(0, 0, 255, 0.95)'; 
+
+	ctx.clearRect(0, 0, cvs.width, cvs.height);
+	ctx.lineWidth = width;
+	var angleSecond = (6/180) * Math.PI * (now.getSeconds() + now.getMilliseconds() / 1000);
+	var angleMinute = (6/180) * Math.PI * (now.getMinutes() + now.getSeconds() / 60);
+	var angleHour = (30/180) * Math.PI * (now.getHours() % 12 + now.getMinutes() / 60);
+
+	var calibration = 12;
+	for(var i = 0; i < calibration; ++i) {
+		var angle = i * (360 / calibration) / 180 * Math.PI;
+		ctx.beginPath();
+		ctx.moveTo(length + Math.sin(angle) * (radius * 0.9), length - Math.cos(angle) * (radius * 0.9));
+		ctx.lineTo(length + Math.sin(angle) * radius, length - Math.cos(angle) * radius);
+		ctx.stroke();
+	}
+
+
+	ctx.shadowBlur    = 15;
+	ctx.shadowColor   = 'rgba(0, 100, 255, 0.9)';
+
+	ctx.beginPath();
+	ctx.moveTo(length, length);
+	ctx.lineTo(length + Math.sin(angleSecond) * (radius * 0.9), length - Math.cos(angleSecond) * (radius * 0.9));
+	ctx.moveTo(length, length);
+	ctx.lineTo(length + Math.sin(angleMinute) * (radius * 0.7), length - Math.cos(angleMinute) * (radius * 0.7));
+	ctx.moveTo(length, length);
+	ctx.lineTo(length + Math.sin(angleHour) * (radius * 0.5), length - Math.cos(angleHour) * (radius * 0.5));
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.arc(length, length, width / 2, 0, 2 * Math.PI);
+	ctx.stroke();
+
+}, 0 );
+</script>
+</body>
+</html>
